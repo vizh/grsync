@@ -12,7 +12,7 @@ import (
 type Rsync struct {
 	Source      string
 	Destination string
-	cmd *exec.Cmd
+	cmd         *exec.Cmd
 }
 
 // RsyncOptions for rsync
@@ -171,6 +171,10 @@ type RsyncOptions struct {
 	Info string
 	// Limit I/O bandwidth using
 	BwLimit int
+	// Exclude
+	Exclude []string
+	// Include
+	Include []string
 
 	// ipv4
 	IPv4 bool
@@ -366,7 +370,7 @@ func getArguments(options RsyncOptions) []string {
 	}
 
 	if options.RsyncProgramm != "" {
-		arguments = append(arguments, "--rsync-programm", options.RsyncProgramm)
+		arguments = append(arguments, "--rsync-path", options.RsyncProgramm)
 	}
 
 	if options.Existing {
@@ -527,6 +531,18 @@ func getArguments(options RsyncOptions) []string {
 
 	if options.BwLimit > 0 {
 		arguments = append(arguments, "--bwlimit", strconv.Itoa(options.BwLimit))
+	}
+
+	if len(options.Exclude) > 0 {
+		for _, item := range options.Exclude {
+			arguments = append(arguments, "--exclude", item)
+		}
+	}
+
+	if len(options.Include) > 0 {
+		for _, item := range options.Include {
+			arguments = append(arguments, "--include", item)
+		}
 	}
 
 	return arguments
