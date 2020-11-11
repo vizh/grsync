@@ -209,6 +209,20 @@ func (r Rsync) Run() error {
 	return r.cmd.Wait()
 }
 
+func (r Rsync) GetCommand() (command string) {
+	for i, arg := range r.cmd.Args {
+		if i != 0 {
+			command += " "
+		}
+		if strings.HasPrefix(arg, "-") || arg == "sshpass" || arg == "rsync" || arg == "sh" {
+			command += arg
+		} else {
+			command += "'" + arg + "'"
+		}
+	}
+	return
+}
+
 // NewRsync returns task with described options
 func NewRsync(source, destination string, options RsyncOptions) *Rsync {
 	arguments := append(getArguments(options), source, destination)

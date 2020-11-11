@@ -45,6 +45,10 @@ func (t Task) Log() Log {
 	}
 }
 
+func (t Task) GetCommand() string {
+	return t.rsync.GetCommand()
+}
+
 // Run starts rsync process with options
 func (t *Task) Run() error {
 	stderr, err := t.rsync.StderrPipe()
